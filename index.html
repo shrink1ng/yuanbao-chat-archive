@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>登录 · 源宝💖</title>
+  <style>
+    :root { color-scheme:light; --background:#f7f5fb; --foreground:#1d1b20; --card:rgba(255,251,255,.92); --primary:#7056c4; --primary-hover:#5d44b2; --muted:#625b71; --border:#e6deef; --ring:rgba(112,86,196,.22); --danger:#b3261e; }
+    * { box-sizing:border-box; }
+    body { min-height:100vh; margin:0; display:grid; place-items:center; padding:24px; overflow:hidden; background:radial-gradient(circle at 18% 18%,rgba(196,181,253,.48),transparent 33%),radial-gradient(circle at 82% 80%,rgba(251,207,232,.48),transparent 32%),var(--background); color:var(--foreground); font:15px/1.55 "HarmonyOS Sans SC","Microsoft YaHei UI",system-ui,sans-serif; }
+    .orb { position:fixed; width:260px; height:260px; border-radius:50%; filter:blur(2px); opacity:.42; pointer-events:none; }
+    .orb.one { top:-90px; right:-70px; background:#d8cbff; }
+    .orb.two { bottom:-110px; left:-75px; background:#ffd0e5; }
+    main { width:min(100%,410px); position:relative; z-index:1; }
+    .card { padding:38px 34px 34px; border:1px solid rgba(230,222,239,.9); border-radius:26px; background:var(--card); box-shadow:0 24px 70px rgba(75,58,118,.15); backdrop-filter:blur(18px); }
+    .mark { width:62px; height:62px; margin:0 auto 18px; display:grid; place-items:center; border-radius:20px; background:linear-gradient(135deg,#8068d1,#f19bc1); color:white; box-shadow:0 12px 28px rgba(112,86,196,.28); font-size:28px; }
+    h1 { margin:0; text-align:center; font-size:25px; letter-spacing:.02em; }
+    .subtitle { margin:7px 0 27px; text-align:center; color:var(--muted); font-size:13px; }
+    label { display:block; margin:14px 0 7px; color:#4b4456; font-size:13px; font-weight:600; }
+    input { width:100%; height:48px; padding:0 14px; border:1px solid var(--border); border-radius:13px; outline:none; background:rgba(255,255,255,.78); color:var(--foreground); font:inherit; transition:border-color .2s,box-shadow .2s,background .2s; }
+    input:focus { border-color:var(--primary); box-shadow:0 0 0 4px var(--ring); background:white; }
+    button { width:100%; height:49px; margin-top:23px; border:0; border-radius:13px; background:var(--primary); color:white; font:600 15px/1 inherit; cursor:pointer; box-shadow:0 10px 22px rgba(112,86,196,.24); transition:transform .15s,background .2s,box-shadow .2s; }
+    button:hover { background:var(--primary-hover); box-shadow:0 12px 25px rgba(112,86,196,.3); }
+    button:active { transform:translateY(1px); }
+    button:disabled { opacity:.7; cursor:wait; }
+    #error { min-height:22px; margin:12px 0 -4px; color:var(--danger); text-align:center; font-size:13px; }
+    .foot { margin-top:18px; color:#81788d; text-align:center; font-size:12px; }
+    @media (max-width:480px) { body { padding:16px; } .card { padding:32px 24px 28px; border-radius:22px; } }
+  </style>
+</head>
+<body>
+  <div class="orb one"></div><div class="orb two"></div>
+  <main>
+    <section class="card" aria-labelledby="login-title">
+      <div class="mark" aria-hidden="true">💖</div>
+      <h1 id="login-title">欢迎回来</h1>
+      <p class="subtitle">请输入账号和密码查看聊天记录</p>
+      <form id="login-form">
+        <label for="username">账号</label><input id="username" name="username" autocomplete="username" required autofocus>
+        <label for="password">密码</label><input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button id="submit" type="submit">登录</button><p id="error" role="alert" aria-live="polite"></p>
+      </form>
+    </section>
+    <p class="foot">仅限受邀访客访问</p>
+  </main>
+  <script>
+    (() => {
+      const authKey='chatArchiveAuth', expected='374b53372f5f7a3ff1c25c482c7348661c7d1d841fe4099567a30c4c8fabbc2b', destination=encodeURI('源宝💖_1953e638/index.html');
+      const form=document.getElementById('login-form'), error=document.getElementById('error'), button=document.getElementById('submit');
+      if(sessionStorage.getItem(authKey)===expected) location.replace(destination);
+      const digest=async value=>{const data=new TextEncoder().encode(value); const hash=await crypto.subtle.digest('SHA-256',data); return [...new Uint8Array(hash)].map(byte=>byte.toString(16).padStart(2,'0')).join('');};
+      form.addEventListener('submit',async event=>{
+        event.preventDefault(); button.disabled=true; error.textContent='';
+        const username=form.username.value.trim(), password=form.password.value, actual=await digest(`${username}:${password}`);
+        if(actual===expected){sessionStorage.setItem(authKey,expected); location.replace(destination); return;}
+        error.textContent='账号或密码不正确，请重新输入。'; form.password.value=''; form.password.focus(); button.disabled=false;
+      });
+    })();
+  </script>
+</body>
+</html>
